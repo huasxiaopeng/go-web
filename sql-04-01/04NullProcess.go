@@ -25,7 +25,35 @@ func main() {
 	if err!=nil{
 		fmt.Printf("mysql connect failed, detail is [%v]", err.Error())
 	}
-	queryRow(db)
+	//queryRow(db)
+
+	queryRows(db)
+}
+
+func queryRows(db *sqlx.DB) {
+
+	type person struct {
+		Uid int `db:"uid"`
+		UserName string `db:"username"`
+
+	}
+
+	var perData person
+	rows, err := db.Queryx("select uid,username from person")
+	if err != nil {
+		fmt.Printf("query data failed, error is [%v]", err.Error())
+		return
+	}
+	var perDataSlice[] person
+	for rows.Next(){
+		err:=rows.StructScan(&perData)
+		if err != nil {
+			fmt.Printf("scan data failed, error is [%v]", err.Error())
+			return
+		}
+		perDataSlice=append(perDataSlice,perData)
+	}
+	fmt.Println("多行查询结果为：",perDataSlice)
 }
 func queryRow(Db *sqlx.DB) {
 	row := Db.QueryRow("select uid, username, create_time from person where uid=13")
@@ -41,3 +69,4 @@ func queryRow(Db *sqlx.DB) {
 	}
 	fmt.Println(uid, userName, createTime)
 }
+

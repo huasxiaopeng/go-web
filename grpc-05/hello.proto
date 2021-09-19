@@ -1,0 +1,13 @@
+
+syntax = "proto3";
+
+message HelloRequest {
+  string name = 1;
+  int32 height = 2;
+  string email = 3;
+  repeated int32 weight = 4 [packed=true];
+}
+
+message TestResponse {
+    string text = 1;
+}
